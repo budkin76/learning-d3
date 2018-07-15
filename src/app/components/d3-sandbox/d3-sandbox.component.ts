@@ -18,9 +18,17 @@ export class D3SandboxComponent implements OnInit {
 
         const circle = svg
             .append('circle')
-            .attr('cx', 200)
-            .attr('cy', 200)
-            .attr('r', 100)
-            .attr('fill', 'blue');
+            .attr('cx', 100)
+            .attr('cy', 250)
+            .attr('r', 70)
+            .attr('fill', 'grey');
+
+        const rectangle = svg
+            .append('rect')
+            .attr('width', 300)
+            .attr('x', 50)
+            .attr('y', 100)
+            .attr('height', 100)
+            .attr('fill', 'red');
     }
 }
