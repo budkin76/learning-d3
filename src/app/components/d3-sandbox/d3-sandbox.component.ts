@@ -7,6 +7,8 @@ import * as d3 from 'd3';
     styleUrls: ['./d3-sandbox.component.scss']
 })
 export class D3SandboxComponent implements OnInit {
+    data = [25, 20, 10, 12, 15];
+
     constructor() {}
 
     ngOnInit() {
@@ -16,19 +18,18 @@ export class D3SandboxComponent implements OnInit {
             .attr('width', 400)
             .attr('height', 400);
 
-        const circle = svg
-            .append('circle')
-            .attr('cx', 100)
-            .attr('cy', 250)
-            .attr('r', 70)
-            .attr('fill', 'grey');
+        const circles = svg.selectAll('circle').data(this.data);
 
-        const rectangle = svg
-            .append('rect')
-            .attr('width', 300)
-            .attr('x', 50)
-            .attr('y', 100)
-            .attr('height', 100)
+        circles
+            .enter()
+            .append('circle')
+            .attr('cx', (d, i) => {
+                return i * 50 + 25;
+            })
+            .attr('cy', 25)
+            .attr('r', d => {
+                return d;
+            })
             .attr('fill', 'red');
     }
 }
