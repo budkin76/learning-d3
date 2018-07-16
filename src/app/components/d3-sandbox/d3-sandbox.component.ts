@@ -10,6 +10,7 @@ export class D3SandboxComponent implements OnInit {
     data: Array<any>;
     svg: any;
     rectangles: any;
+    y: any;
 
     constructor() {}
 
@@ -28,22 +29,23 @@ export class D3SandboxComponent implements OnInit {
                     .attr('width', 400)
                     .attr('height', 400);
 
-                this.rectangles = this.svg.selectAll('rect').data(this.data);
+                this.y = d3
+                    .scaleLinear()
+                    .domain([0, 828])
+                    .range([0, 400]);
 
-                this.rectangles
+                this.rectangles = this.svg
+                    .selectAll('rect')
+                    .data(this.data)
                     .enter()
                     .append('rect')
                     .attr('x', (d, i) => {
-                        return i * 50;
+                        return i * 60;
                     })
-                    .attr('y', d => {
-                        return 10;
-                    })
-                    .attr('width', d => {
-                        return 25;
-                    })
+                    .attr('y', 20)
+                    .attr('width', 40)
                     .attr('height', d => {
-                        return d.height;
+                        return this.y(d.height);
                     })
                     .attr('fill', 'grey');
             })
