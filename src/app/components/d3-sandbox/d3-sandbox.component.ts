@@ -10,6 +10,7 @@ export class D3SandboxComponent implements OnInit {
     data: Array<any>;
     svg: any;
     rectangles: any;
+    x: any;
     y: any;
 
     constructor() {}
@@ -29,6 +30,21 @@ export class D3SandboxComponent implements OnInit {
                     .attr('width', 400)
                     .attr('height', 400);
 
+                this.x = d3
+                    .scaleBand()
+                    .domain([
+                        'Burj Khalifa',
+                        'Shanghai Tower',
+                        'Abraj Al-Bait Clock Tower',
+                        'Ping An Finance Centre',
+                        'Lotte World Tower',
+                        'One World Trade Center',
+                        'Guangzhou CTF Finance Center'
+                    ])
+                    .range([0, 400])
+                    .paddingInner(0.3)
+                    .paddingOuter(0.3);
+
                 this.y = d3
                     .scaleLinear()
                     .domain([0, 828])
@@ -39,11 +55,11 @@ export class D3SandboxComponent implements OnInit {
                     .data(this.data)
                     .enter()
                     .append('rect')
-                    .attr('x', (d, i) => {
-                        return i * 60;
+                    .attr('x', d => {
+                        return this.x(d.name);
                     })
                     .attr('y', 20)
-                    .attr('width', 40)
+                    .attr('width', this.x.bandwidth)
                     .attr('height', d => {
                         return this.y(d.height);
                     })
