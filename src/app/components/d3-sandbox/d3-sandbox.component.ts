@@ -7,19 +7,18 @@ import * as d3 from 'd3';
     styleUrls: ['./d3-sandbox.component.scss']
 })
 export class D3SandboxComponent implements OnInit {
-    // data = [25, 20, 10, 12, 15];
     data: Array<any>;
     svg: any;
-    circles: any;
+    rectangles: any;
 
     constructor() {}
 
     ngOnInit() {
-        d3.json('../../../assets/data/ages.json')
+        d3.json('../../../assets/data/buildings.json')
             .then((data: Array<any>) => {
                 this.data = data;
                 for (const entry of this.data) {
-                    entry.age = +entry.age;
+                    entry.height = +entry.height;
                 }
                 console.log(this.data);
 
@@ -29,25 +28,24 @@ export class D3SandboxComponent implements OnInit {
                     .attr('width', 400)
                     .attr('height', 400);
 
-                this.circles = this.svg.selectAll('circle').data(this.data);
+                this.rectangles = this.svg.selectAll('rect').data(this.data);
 
-                this.circles
+                this.rectangles
                     .enter()
-                    .append('circle')
-                    .attr('cx', (d, i) => {
-                        return i * 50 + 25;
+                    .append('rect')
+                    .attr('x', (d, i) => {
+                        return i * 50;
                     })
-                    .attr('cy', 25)
-                    .attr('r', d => {
-                        return d.age * 2;
+                    .attr('y', d => {
+                        return 10;
                     })
-                    .attr('fill', d => {
-                        if (d.name === 'Tony') {
-                            return 'blue';
-                        } else {
-                            return 'red';
-                        }
-                    });
+                    .attr('width', d => {
+                        return 25;
+                    })
+                    .attr('height', d => {
+                        return d.height;
+                    })
+                    .attr('fill', 'grey');
             })
             .catch(error => {
                 console.log(error);
