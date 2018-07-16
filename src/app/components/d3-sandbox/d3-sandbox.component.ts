@@ -32,22 +32,23 @@ export class D3SandboxComponent implements OnInit {
 
                 this.x = d3
                     .scaleBand()
-                    .domain([
-                        'Burj Khalifa',
-                        'Shanghai Tower',
-                        'Abraj Al-Bait Clock Tower',
-                        'Ping An Finance Centre',
-                        'Lotte World Tower',
-                        'One World Trade Center',
-                        'Guangzhou CTF Finance Center'
-                    ])
+                    .domain(
+                        this.data.map(d => {
+                            return d.name;
+                        })
+                    )
                     .range([0, 400])
                     .paddingInner(0.3)
                     .paddingOuter(0.3);
 
                 this.y = d3
                     .scaleLinear()
-                    .domain([0, 828])
+                    .domain([
+                        0,
+                        d3.max(this.data, d => {
+                            return d.height;
+                        })
+                    ])
                     .range([0, 400]);
 
                 this.rectangles = this.svg
