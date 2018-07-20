@@ -13,7 +13,7 @@ export class D3SandboxComponent implements OnInit {
     rectangles: any;
     x: any;
     y: any;
-    margin = { top: 10, right: 10, bottom: 100, left: 100 };
+    margin = { top: 10, right: 10, bottom: 150, left: 100 };
     width: number;
     height: number;
     g: any;
@@ -118,7 +118,7 @@ export class D3SandboxComponent implements OnInit {
                     .attr('transform', 'rotate(-40)');
 
                 this.yAxisCall = d3
-                    .axisRight(this.y)
+                    .axisLeft(this.y)
                     .ticks(3)
                     .tickFormat(d => {
                         return d + 'm';
@@ -134,10 +134,10 @@ export class D3SandboxComponent implements OnInit {
                     .data(this.data)
                     .enter()
                     .append('rect')
+                    .attr('y', 0)
                     .attr('x', d => {
                         return this.x(d.name);
                     })
-                    // .attr('y', 20)
                     .attr('width', this.x.bandwidth)
                     .attr('height', d => {
                         return this.y(d.height);
