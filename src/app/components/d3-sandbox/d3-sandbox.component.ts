@@ -9,9 +9,14 @@ import * as d3 from 'd3';
 export class D3SandboxComponent implements OnInit {
     data: Array<any>;
     svg: any;
+    colorRect: any;
     rectangles: any;
     x: any;
     y: any;
+    margin = { top: 10, right: 10, bottom: 100, left: 100 };
+    width: number;
+    height: number;
+    g: any;
 
     constructor() {}
 
@@ -24,11 +29,38 @@ export class D3SandboxComponent implements OnInit {
                 }
                 console.log(this.data);
 
+                this.width = 600 - this.margin.left - this.margin.right;
+                this.height = 400 - this.margin.top - this.margin.bottom;
+
                 this.svg = d3
                     .select('#chart-area')
                     .append('svg')
-                    .attr('width', 400)
-                    .attr('height', 400);
+                    .attr(
+                        'width',
+                        this.width + this.margin.left + this.margin.right
+                    )
+                    .attr(
+                        'height',
+                        this.height + this.margin.top + this.margin.bottom
+                    );
+
+                // uncomment to see svg background color
+                // this.colorRect = this.svg
+                //     .append('rect')
+                //     .attr('width', '100%')
+                //     .attr('height', '100%')
+                //     .attr('fill', 'red');
+
+                this.g = this.svg
+                    .append('g')
+                    .attr(
+                        'transform',
+                        'translate(' +
+                            this.margin.left +
+                            ', ' +
+                            this.margin.top +
+                            ')'
+                    );
 
                 this.x = d3
                     .scaleBand()
@@ -37,7 +69,7 @@ export class D3SandboxComponent implements OnInit {
                             return d.name;
                         })
                     )
-                    .range([0, 400])
+                    .range([0, this.width])
                     .paddingInner(0.3)
                     .paddingOuter(0.3);
 
@@ -49,9 +81,9 @@ export class D3SandboxComponent implements OnInit {
                             return d.height;
                         })
                     ])
-                    .range([0, 400]);
+                    .range([0, this.height]);
 
-                this.rectangles = this.svg
+                this.rectangles = this.g
                     .selectAll('rect')
                     .data(this.data)
                     .enter()
