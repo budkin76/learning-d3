@@ -13,7 +13,7 @@ export class D3SandboxComponent implements OnInit {
     rectangles: any;
     x: any;
     y: any;
-    margin = { top: 10, right: 10, bottom: 150, left: 100 };
+    margin: any;
     width: number;
     height: number;
     g: any;
@@ -31,9 +31,12 @@ export class D3SandboxComponent implements OnInit {
                 }
                 console.log(this.data);
 
+                // SVG margins to make space for x and y axis
+                this.margin = { top: 10, right: 10, bottom: 150, left: 100 };
                 this.width = 600 - this.margin.left - this.margin.right;
                 this.height = 400 - this.margin.top - this.margin.bottom;
 
+                // Main SVG
                 this.svg = d3
                     .select('#chart-area')
                     .append('svg')
@@ -46,13 +49,14 @@ export class D3SandboxComponent implements OnInit {
                         this.height + this.margin.top + this.margin.bottom
                     );
 
-                // uncomment to see svg background color
+                // Uncomment to see svg background color
                 // this.colorRect = this.svg
                 //     .append('rect')
                 //     .attr('width', '100%')
                 //     .attr('height', '100%')
                 //     .attr('fill', 'red');
 
+                // Transform (translate) group
                 this.g = this.svg
                     .append('g')
                     .attr(
@@ -64,6 +68,7 @@ export class D3SandboxComponent implements OnInit {
                             ')'
                     );
 
+                // X-axis label
                 this.g
                     .append('text')
                     .attr('class', 'x axis-label')
@@ -73,6 +78,7 @@ export class D3SandboxComponent implements OnInit {
                     .attr('text-anchor', 'middle')
                     .text('The worlds tallest buildings');
 
+                // Y-axis label
                 this.g
                     .append('text')
                     .attr('class', 'y axis-label')
@@ -83,6 +89,7 @@ export class D3SandboxComponent implements OnInit {
                     .attr('transform', 'rotate(-90)')
                     .text('Height (m)');
 
+                // Band scale for x
                 this.x = d3
                     .scaleBand()
                     .domain(
@@ -94,6 +101,7 @@ export class D3SandboxComponent implements OnInit {
                     .paddingInner(0.3)
                     .paddingOuter(0.3);
 
+                // Linear scale for y
                 this.y = d3
                     .scaleLinear()
                     .domain([
@@ -102,10 +110,10 @@ export class D3SandboxComponent implements OnInit {
                             return d.height;
                         })
                     ])
-                    .range([0, this.height]);
+                    .range([this.height, 0]);
 
+                // X-axis
                 this.xAxisCall = d3.axisBottom(this.x);
-
                 this.g
                     .append('g')
                     .attr('class', 'x-axis')
@@ -117,30 +125,33 @@ export class D3SandboxComponent implements OnInit {
                     .attr('text-anchor', 'end')
                     .attr('transform', 'rotate(-40)');
 
+                // Y-axis
                 this.yAxisCall = d3
                     .axisLeft(this.y)
                     .ticks(3)
                     .tickFormat(d => {
                         return d + 'm';
                     });
-
                 this.g
                     .append('g')
                     .attr('class', 'y-axis')
                     .call(this.yAxisCall);
 
+                // Bars
                 this.rectangles = this.g
                     .selectAll('rect')
                     .data(this.data)
                     .enter()
                     .append('rect')
-                    .attr('y', 0)
+                    .attr('y', d => {
+                        return this.y(d.height);
+                    })
                     .attr('x', d => {
                         return this.x(d.name);
                     })
                     .attr('width', this.x.bandwidth)
                     .attr('height', d => {
-                        return this.y(d.height);
+                        return this.height - this.y(d.height);
                     })
                     .attr('fill', 'grey');
             })
