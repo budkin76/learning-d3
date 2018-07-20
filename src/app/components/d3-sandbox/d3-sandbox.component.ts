@@ -17,6 +17,8 @@ export class D3SandboxComponent implements OnInit {
     width: number;
     height: number;
     g: any;
+    xAxisCall: any;
+    yAxisCall: any;
 
     constructor() {}
 
@@ -62,6 +64,25 @@ export class D3SandboxComponent implements OnInit {
                             ')'
                     );
 
+                this.g
+                    .append('text')
+                    .attr('class', 'x axis-label')
+                    .attr('x', this.width / 2)
+                    .attr('y', this.height + 140)
+                    .attr('font-size', '20px')
+                    .attr('text-anchor', 'middle')
+                    .text('The worlds tallest buildings');
+
+                this.g
+                    .append('text')
+                    .attr('class', 'y axis-label')
+                    .attr('x', -(this.height / 2))
+                    .attr('y', -60)
+                    .attr('font-size', '20px')
+                    .attr('text-anchor', 'middle')
+                    .attr('transform', 'rotate(-90)')
+                    .text('Height (m)');
+
                 this.x = d3
                     .scaleBand()
                     .domain(
@@ -83,6 +104,31 @@ export class D3SandboxComponent implements OnInit {
                     ])
                     .range([0, this.height]);
 
+                this.xAxisCall = d3.axisBottom(this.x);
+
+                this.g
+                    .append('g')
+                    .attr('class', 'x-axis')
+                    .attr('transform', 'translate(0,' + this.height + ')')
+                    .call(this.xAxisCall)
+                    .selectAll('text')
+                    .attr('y', '10')
+                    .attr('x', '-5')
+                    .attr('text-anchor', 'end')
+                    .attr('transform', 'rotate(-40)');
+
+                this.yAxisCall = d3
+                    .axisRight(this.y)
+                    .ticks(3)
+                    .tickFormat(d => {
+                        return d + 'm';
+                    });
+
+                this.g
+                    .append('g')
+                    .attr('class', 'y-axis')
+                    .call(this.yAxisCall);
+
                 this.rectangles = this.g
                     .selectAll('rect')
                     .data(this.data)
@@ -91,7 +137,7 @@ export class D3SandboxComponent implements OnInit {
                     .attr('x', d => {
                         return this.x(d.name);
                     })
-                    .attr('y', 20)
+                    // .attr('y', 20)
                     .attr('width', this.x.bandwidth)
                     .attr('height', d => {
                         return this.y(d.height);
