@@ -98,7 +98,7 @@ export class StarbreakCoffeeComponent implements OnInit {
                         })
                     )
                     .range([0, this.width])
-                    .padding(0.2)
+                    .padding(0.2);
 
                 // Linear scale for y
                 this.y = d3
