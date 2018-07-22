@@ -17,6 +17,8 @@ export class StarbreakCoffeeComponent implements OnInit {
     width: number;
     height: number;
     g: any;
+    xAxisGroup: any;
+    yAxisGroup: any;
     xAxisCall: any;
     yAxisCall: any;
 
@@ -29,7 +31,7 @@ export class StarbreakCoffeeComponent implements OnInit {
                 for (const entry of this.data) {
                     entry.revenue = +entry.revenue;
                 }
-                console.log(data);
+                console.log(this.data);
 
                 // SVG margins to make space for x and y axis
                 this.margin = { top: 50, right: 20, bottom: 100, left: 80 };
@@ -49,6 +51,15 @@ export class StarbreakCoffeeComponent implements OnInit {
                         this.height + this.margin.top + this.margin.bottom
                     );
 
+                // Band scale for x
+                this.x = d3
+                    .scaleBand()
+                    .range([0, this.width])
+                    .padding(0.2);
+
+                // Linear scale for y
+                this.y = d3.scaleLinear().range([this.height, 0]);
+
                 // Uncomment to see svg background color
                 // this.colorRect = this.svg
                 //     .append('rect')
@@ -67,6 +78,15 @@ export class StarbreakCoffeeComponent implements OnInit {
                             this.margin.top +
                             ')'
                     );
+
+                // X axis group
+                this.xAxisGroup = this.g
+                    .append('g')
+                    .attr('class', 'x-axis')
+                    .attr('transform', 'translate(0,' + this.height + ')');
+
+                // Y axis group
+                this.yAxisGroup = this.g.append('g').attr('class', 'y-axis');
 
                 // X-axis label
                 this.g
@@ -89,68 +109,63 @@ export class StarbreakCoffeeComponent implements OnInit {
                     .attr('transform', 'rotate(-90)')
                     .text('Revenue');
 
-                // Band scale for x
-                this.x = d3
-                    .scaleBand()
-                    .domain(
-                        this.data.map(d => {
-                            return d.month;
-                        })
-                    )
-                    .range([0, this.width])
-                    .padding(0.2);
+                d3.interval(() => {
+                    this.update(this.data);
+                }, 1000);
 
-                // Linear scale for y
-                this.y = d3
-                    .scaleLinear()
-                    .domain([
-                        0,
-                        d3.max(this.data, d => {
-                            return d.revenue;
-                        })
-                    ])
-                    .range([this.height, 0]);
-
-                // X-axis
-                this.xAxisCall = d3.axisBottom(this.x);
-                this.g
-                    .append('g')
-                    .attr('class', 'x-axis')
-                    .attr('transform', 'translate(0,' + this.height + ')')
-                    .call(this.xAxisCall);
-
-                // Y-axis
-                this.yAxisCall = d3
-                    .axisLeft(this.y)
-                    .ticks(10)
-                    .tickFormat(d => {
-                        return '$' + d;
-                    });
-                this.g
-                    .append('g')
-                    .attr('class', 'y-axis')
-                    .call(this.yAxisCall);
-
-                // Bars
-                this.rectangles = this.g
-                    .selectAll('rect')
-                    .data(this.data)
-                    .enter()
-                    .append('rect')
-                    .attr('y', d => {
-                        return this.y(d.revenue);
-                    })
-                    .attr('x', d => {
-                        return this.x(d.month);
-                    })
-                    .attr('width', this.x.bandwidth)
-                    .attr('height', d => {
-                        return this.height - this.y(d.revenue);
-                    })
-                    .attr('fill', 'grey');
+                // Run visualization for first time
+                this.update(this.data);
             })
             .catch(error => {
                 console.log(error);
             });
+    }
+
+    private update(data: Array<any>): void {
+        // X domain
+        this.x.domain(
+            data.map(d => {
+                return d.month;
+            })
+        );
+
+        // Y domain
+        this.y.domain([
+            0,
+            d3.max(data, d => {
+                return d.revenue;
+            })
+        ]);
+
+        // X-axis
+        this.xAxisCall = d3.axisBottom(this.x);
+        this.xAxisGroup.call(this.xAxisCall);
+
+        // Y-axis
+        this.yAxisCall = d3
+            .axisLeft(this.y)
+            .ticks(10)
+            .tickFormat(d => {
+                return '$' + d;
+            });
+        this.yAxisGroup.call(this.yAxisCall);
+
+        // Bars
+        // this.rectangles = this.g
+        //     .selectAll('rect')
+        //     .data(this.data)
+        //     .enter()
+        //     .append('rect')
+        //     .attr('y', d => {
+        //         return this.y(d.revenue);
+        //     })
+        //     .attr('x', d => {
+        //         return this.x(d.month);
+        //     })
+        //     .attr('width', this.x.bandwidth)
+        //     .attr('height', d => {
+        //         return this.height - this.y(d.revenue);
+        //     })
+        //     .attr('fill', 'grey');
     }
 }
