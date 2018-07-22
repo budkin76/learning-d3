@@ -151,21 +151,40 @@ export class StarbreakCoffeeComponent implements OnInit {
         this.yAxisGroup.call(this.yAxisCall);
 
         // Bars
-        // this.rectangles = this.g
-        //     .selectAll('rect')
-        //     .data(this.data)
-        //     .enter()
-        //     .append('rect')
-        //     .attr('y', d => {
-        //         return this.y(d.revenue);
-        //     })
-        //     .attr('x', d => {
-        //         return this.x(d.month);
-        //     })
-        //     .attr('width', this.x.bandwidth)
-        //     .attr('height', d => {
-        //         return this.height - this.y(d.revenue);
-        //     })
-        //     .attr('fill', 'grey');
+
+        // JOIN new data with old elements
+        this.rectangles = this.g.selectAll('rect').data(this.data);
+
+        // EXIT old elements not present in new data
+        this.rectangles.exit().remove();
+
+        // UPDATE old elements present in new data
+        this.rectangles
+            .attr('y', d => {
+                return this.y(d.revenue);
+            })
+            .attr('x', d => {
+                return this.x(d.month);
+            })
+            .attr('height', d => {
+                return this.height - this.y(d.revenue);
+            })
+            .attr('width', this.x.bandwidth);
+
+        // ENTER new elements present in new data
+        this.rectangles
+            .enter()
+            .append('rect')
+            .attr('y', d => {
+                return this.y(d.revenue);
+            })
+            .attr('x', d => {
+                return this.x(d.month);
+            })
+            .attr('height', d => {
+                return this.height - this.y(d.revenue);
+            })
+            .attr('width', this.x.bandwidth)
+            .attr('fill', 'grey');
     }
 }
