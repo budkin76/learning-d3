@@ -145,7 +145,7 @@ export class StarbreakCoffeeComponent implements OnInit {
         // Bars
 
         // JOIN new data with old elements
-        this.rectangles = this.g.selectAll('rect').data(updateData, d => {
+        this.rectangles = this.g.selectAll('circle').data(updateData, d => {
             return d.month;
         });
 
@@ -154,33 +154,27 @@ export class StarbreakCoffeeComponent implements OnInit {
             .exit()
             .attr('fill', 'red')
             .transition(this.transition)
-            .attr('y', this.y(0))
-            .attr('height', 0)
+            .attr('cy', this.y(0))
             .remove();
 
         // ENTER new elements present in new data
         this.rectangles
             .enter()
-            .append('rect')
+            .append('circle')
             .attr('fill', 'grey')
-            .attr('y', this.y(0))
-            .attr('height', 0)
-            .attr('x', d => {
-                return this.x(d.month);
+            .attr('cy', this.y(0))
+            .attr('cx', d => {
+                return this.x(d.month) + this.x.bandwidth() / 2;
             })
-            .attr('width', this.x.bandwidth)
+            .attr('r', 5)
             // AND UPDATE old elements present in new data
             .merge(this.rectangles)
             .transition(this.transition)
-            .attr('x', d => {
-                return this.x(d.month);
+            .attr('cx', d => {
+                return this.x(d.month) + this.x.bandwidth() / 2;
             })
-            .attr('width', this.x.bandwidth)
-            .attr('y', d => {
+            .attr('cy', d => {
                 return this.y(d[dataValue]);
-            })
-            .attr('height', d => {
-                return this.height - this.y(d[dataValue]);
             });
 
         // Set y label
