@@ -25,6 +25,9 @@ export class GapminderCloneComponent implements OnInit {
     xLabel: any;
     yLabel: any;
     timeLabel: any;
+    continents: Array<any>;
+    legend: any;
+    legendRow: any;
 
     constructor() {}
 
@@ -113,6 +116,39 @@ export class GapminderCloneComponent implements OnInit {
             .append('g')
             .attr('class', 'y axis')
             .call(this.yAxisCall);
+
+        this.continents = ['europe', 'asia', 'americas', 'africa'];
+
+        this.legend = this.g
+            .append('g')
+            .attr(
+                'transform',
+                'translate(' +
+                    (this.width - 10) +
+                    ',' +
+                    (this.height - 125) +
+                    ')'
+            );
+
+        this.continents.forEach((continent, i) => {
+            this.legendRow = this.legend
+                .append('g')
+                .attr('transform', 'translate(0' + ',' + i * 20 + ')');
+
+            this.legendRow
+                .append('rect')
+                .attr('width', 10)
+                .attr('height', 10)
+                .attr('fill', this.continentColor(continent));
+
+            this.legendRow
+                .append('text')
+                .attr('x', -10)
+                .attr('y', 10)
+                .attr('text-anchor', 'end')
+                .style('text-transform', 'capitalize')
+                .text(continent);
+        });
 
         d3.json('../../../assets/data/data.json')
             .then((data: Array<any>) => {
