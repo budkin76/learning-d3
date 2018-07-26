@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
+import d3Tip from 'd3-tip';
 
 @Component({
     selector: 'app-gapminder-clone',
@@ -28,6 +29,7 @@ export class GapminderCloneComponent implements OnInit {
     continents: Array<any>;
     legend: any;
     legendRow: any;
+    tip: any;
 
     constructor() {}
 
@@ -48,6 +50,30 @@ export class GapminderCloneComponent implements OnInit {
                 'transform',
                 'translate(' + this.margin.left + ', ' + this.margin.top + ')'
             );
+
+        this.tip = d3Tip()
+            .attr('class', 'd3-tip')
+            .html(d => {
+                const tipTemplate =
+                    `<div>Country: <strong>` +
+                    d.country +
+                    `</strong></div>
+                <div>Continent: <span style='text-transform: capitalize'><strong>` +
+                    d.continent +
+                    `</strong></span></div>
+                <div>Life Expectancy: <strong>` +
+                    d3.format('.2f')(d.life_exp) +
+                    `</strong></div>
+                <div>GDP Per Capita: <strong>` +
+                    d3.format('$,.0f')(d.income) +
+                    `</strong></div>
+                <div>Population: <strong>` +
+                    d3.format(',.0f')(d.population) +
+                    `</strong></div>`;
+                return tipTemplate;
+            });
+
+        this.g.call(this.tip);
 
         // X axis group
         this.xAxisGroup = this.g
@@ -197,6 +223,7 @@ export class GapminderCloneComponent implements OnInit {
             .attr('class', 'exit')
             .remove();
 
+        // ENTER new elements present in new data.
         this.circles
             .enter()
             .append('circle')
@@ -204,6 +231,8 @@ export class GapminderCloneComponent implements OnInit {
             .attr('fill', d => {
                 return this.continentColor(d.continent);
             })
+            .on('mouseover', this.tip.show)
+            .on('mouseout', this.tip.hide)
             .merge(this.circles)
             .transition(this.transition)
             .attr('cy', d => {
