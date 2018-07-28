@@ -30,6 +30,17 @@ export class GapminderCloneComponent implements OnInit {
     legend: any;
     legendRow: any;
     tip: any;
+    interval: any;
+    formattedData: Array<any>;
+    playPauseButtonText = 'Play';
+    continentSelect = [
+        { label: 'All', value: 'all' },
+        { label: 'Europe', value: 'europe' },
+        { label: 'Asia', value: 'asia' },
+        { label: 'Americas', value: 'americas' },
+        { label: 'Africa', value: 'africa' }
+    ];
+    selectedContinent = 'all';
 
     constructor() {}
 
@@ -179,7 +190,7 @@ export class GapminderCloneComponent implements OnInit {
         d3.json('../../../assets/data/data.json')
             .then((data: Array<any>) => {
                 // Clean data
-                const formattedData = data.map(function(year) {
+                this.formattedData = data.map(year => {
                     return year['countries']
                         .filter(country => {
                             const dataExists =
@@ -193,24 +204,25 @@ export class GapminderCloneComponent implements OnInit {
                         });
                 });
 
-                // Run the code every 0.1 second
-                d3.interval(() => {
-                    // At the end of our data, loop back
-                    this.time = this.time < 214 ? this.time + 1 : 0;
-                    this.update(formattedData[this.time]);
-                }, 100);
-
                 // First run of the visualization
-                this.update(formattedData[0]);
+                this.update(this.formattedData[0]);
             })
             .catch(error => {
                 console.log(error);
             });
     }
 
-    private update(updateData: Array<any>): void {
+    update(data: Array<any>): void {
         // Standard transition time for the visualization
         this.transition = d3.transition().duration(100);
+
+        const updateData = data.filter((d: any) => {
+            if (this.selectedContinent === 'all') {
+                return d;
+            } else {
+                return d.continent === this.selectedContinent;
+            }
+        });
 
         // JOIN new data with old elements.
         this.circles = this.g.selectAll('circle').data(updateData, d => {
@@ -247,5 +259,28 @@ export class GapminderCloneComponent implements OnInit {
 
         // Update the time label
         this.timeLabel.text(+(this.time + 1800));
+    }
+
+    playPause(): void {
+        if (this.playPauseButtonText === 'Play') {
+            this.playPauseButtonText = 'Pause';
+            this.interval = setInterval(() => {
+                // At the end of our data, loop back
+                this.time = this.time < 214 ? this.time + 1 : 0;
+                this.update(this.formattedData[this.time]);
+            }, 100);
+        } else {
+            this.playPauseButtonText = 'Play';
+            clearInterval(this.interval);
+        }
+    }
+
+    reset(): void {
+        this.time = 0;
+        this.update(this.formattedData[0]);
+    }
+
+    onSelectContinent(): void {
+        this.update(this.formattedData[this.time]);
     }
 }

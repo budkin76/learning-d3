@@ -1,4 +1,15 @@
 <mat-card>
     <h1>Gapminder Clone</h1>
+    <mat-card>
+        <button mat-raised-button id="play-button" color="primary" (click)="playPause()">{{ playPauseButtonText }}</button>
+        <button mat-raised-button id="reset-button" color="warn" (click)="reset()">Reset</button>
+    </mat-card>
+    <mat-card>
+        <mat-form-field>
+            <mat-select id="continent-select" placeholder="Select continent" [(value)]="selectedContinent" (selectionChange)='onSelectContinent()'>
+                <mat-option value="{{ continent.value }}" *ngFor="let continent of continentSelect">{{ continent.label }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-card>
     <div id="chart-area"></div>
 </mat-card>

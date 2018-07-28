@@ -4,6 +4,7 @@ import {
     MatCardModule,
     MatIconModule,
     MatListModule,
+    MatSelectModule,
     MatSidenavModule,
     MatToolbarModule
 } from '@angular/material';
@@ -15,12 +16,18 @@ import { StarbreakCoffeeComponent } from './components/starbreak-coffee/starbrea
 import { GapminderCloneComponent } from './components/gapminder-clone/gapminder-clone.component';
 
 @NgModule({
-    declarations: [AppComponent, D3SandboxComponent, StarbreakCoffeeComponent, GapminderCloneComponent],
+    declarations: [
+        AppComponent,
+        D3SandboxComponent,
+        StarbreakCoffeeComponent,
+        GapminderCloneComponent
+    ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         MatToolbarModule,
         MatButtonModule,
+        MatSelectModule,
         MatSidenavModule,
         MatIconModule,
         MatListModule,
