@@ -11,5 +11,12 @@
             </mat-select>
         </mat-form-field>
     </mat-card>
+    <mat-card>
+        <label>Year:
+            <span>{{ sliderValue }}</span>
+        </label>
+        <br />
+        <mat-slider class="year-slider" [max]="sliderMax" [min]="sliderMin" [step]="sliderStep" [(ngModel)]="sliderValue" (input)="onSliderChange($event)"></mat-slider>
+    </mat-card>
     <div id="chart-area"></div>
 </mat-card>

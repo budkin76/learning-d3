@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
     MatButtonModule,
     MatCardModule,
@@ -6,6 +7,7 @@ import {
     MatListModule,
     MatSelectModule,
     MatSidenavModule,
+    MatSliderModule,
     MatToolbarModule
 } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
@@ -25,10 +27,12 @@ import { GapminderCloneComponent } from './components/gapminder-clone/gapminder-
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        FormsModule,
         MatToolbarModule,
         MatButtonModule,
         MatSelectModule,
         MatSidenavModule,
+        MatSliderModule,
         MatIconModule,
         MatListModule,
         MatCardModule

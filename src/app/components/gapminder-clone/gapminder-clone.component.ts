@@ -41,10 +41,15 @@ export class GapminderCloneComponent implements OnInit {
         { label: 'Africa', value: 'africa' }
     ];
     selectedContinent = 'all';
+    sliderMax = 2014;
+    sliderMin = 1800;
+    sliderStep = 1;
+    sliderValue: number;
 
     constructor() {}
 
     ngOnInit() {
+        this.sliderValue = this.sliderMin;
         // SVG margins to make space for x and y axis
         this.margin = { top: 50, right: 20, bottom: 100, left: 80 };
         this.width = 800 - this.margin.left - this.margin.right;
@@ -259,6 +264,9 @@ export class GapminderCloneComponent implements OnInit {
 
         // Update the time label
         this.timeLabel.text(+(this.time + 1800));
+
+        // Update the slider
+        this.sliderValue = this.time + 1800;
     }
 
     playPause(): void {
@@ -281,6 +289,11 @@ export class GapminderCloneComponent implements OnInit {
     }
 
     onSelectContinent(): void {
+        this.update(this.formattedData[this.time]);
+    }
+
+    onSliderChange(event): void {
+        this.time = this.sliderValue - 1800;
         this.update(this.formattedData[this.time]);
     }
 }
