@@ -1,0 +1,46 @@
+:host ::ng-deep {
+    #chart-area svg {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+
+    .axis {
+        font-size: 10px;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #d4d8da;
+        stroke-width: 2px;
+        shape-rendering: crispEdges;
+    }
+
+    .overlay {
+        fill: none;
+        pointer-events: all;
+    }
+
+    .focus {
+        background: red;
+    }
+
+    .focus circle {
+        fill: #f1f3f3;
+        stroke: #777;
+        stroke-width: 3px;
+    }
+
+    .hover-line {
+        stroke: #777;
+        stroke-width: 2px;
+        stroke-dasharray: 3, 3;
+    }
+
+    .line {
+        fill: none;
+        stroke-width: 3px;
+        stroke: grey;
+    }
+}
